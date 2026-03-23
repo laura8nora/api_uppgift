@@ -34,3 +34,35 @@ app.get("/", (req, res) => {
 app.listen(3000, () => {
   console.log("Server running on port 3000");
 });
+
+
+
+
+app.get("/users", (req, res) => {
+  db.query("SELECT * FROM users", (err, results) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+      return;
+    }
+    res.json(results);
+  });
+});
+
+
+
+
+app.get("/users/:id", (req, res) => {
+  const id = req.params.id;
+  db.query("SELECT * FROM users WHERE id = ?", [id], (err, results) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+      return;
+    }
+    if (results.length === 0) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
+    res.json(results[0]);
+  });
+});
+
