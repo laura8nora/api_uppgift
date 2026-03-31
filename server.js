@@ -66,3 +66,24 @@ app.get("/users/:id", (req, res) => {
   });
 });
 
+
+
+
+app.post("/users", (req, res) => {
+  const { name } = req.body;
+  if (!name) {
+    res.status(400).json({ error: "Name is required" });
+    return;
+  }
+
+  db.query("INSERT INTO users (name) VALUES (?)", [name], (err, result) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+      return;
+    }
+    res.status(201).json({
+      id: result.insertId,
+      name: name
+    });
+  });
+});
